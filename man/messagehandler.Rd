@@ -38,7 +38,7 @@ warn_if_none(.l, .p = isTRUE, msg = NULL)
 
 warn_if_not(.x, .p = isTRUE, msg = NULL)
 
-message_if(.x, .p = isTRUE, msg = NULL)
+message_if(.x = NULL, .p = isTRUE, msg = NULL)
 
 message_if_any(.l, .p = isTRUE, msg = NULL)
 
@@ -49,16 +49,16 @@ message_if_none(.l, .p = isTRUE, msg = NULL)
 message_if_not(.x, .p = isTRUE, msg = NULL)
 }
 \arguments{
-\item{.x}{the element to evaluate. If dot \code{.}, the}
+\item{.x}{the element to evaluate. It can be a predicate function (i.e a function returning TRUE).}
 
-\item{.p}{the predicate with the condition to test on \code{.x} or \code{.l}. Default is isTRUE.}
+\item{.p}{the predicate with the condition to test on \code{.x} or \code{.l}. Default is \code{isTRUE}.}
 
 \item{msg}{the message to return. If NULL (default), the built-in message is printed.}
 
 \item{.l}{the list of elements to evaluate}
 }
 \description{
-Friendlier messaging functions
+Friendlier messaging functions.
 }
 \examples{
 \dontrun{

@@ -1,15 +1,15 @@
 #' Warn if
 #'
-#' Friendlier messaging functions
+#' Friendlier messaging functions.
 #'
 #' @export
 #'
-#' @param .x the element to evaluate. If dot \code{.}, the
+#' @param .x the element to evaluate. It can be a predicate function (i.e a function returning TRUE).
 #' @param .l the list of elements to evaluate
-#' @param .p the predicate with the condition to test on \code{.x} or \code{.l}. Default is isTRUE.
+#' @param .p the predicate with the condition to test on \code{.x} or \code{.l}. Default is \code{isTRUE}.
 #' @param msg the message to return. If NULL (default), the built-in message is printed.
 #'
-#' @importFrom rlang quo_text enquo as_function
+#' @importFrom rlang as_function
 #'
 #' @rdname messagehandler
 #'
@@ -32,16 +32,9 @@
 
 
 stop_if <- function(.x, .p = isTRUE, msg = NULL){
-  test <- deparse(substitute(.p))
-  x <- deparse(substitute(.x))
-  if (x == ".") {
-    res <- as_function(.p)()
-  } else {
-    res <- as_function(.p)(.x)
-  }
-  if ( res ) {
+  if ( as_function(.p)(.x) ) {
     if (is.null(msg)) {
-      stop(paste0( "Test `", test, "` on `", x, "` returned an error."), call. = FALSE)
+      stop(paste0( "Test `", deparse(substitute(.p)), "` on `", deparse(substitute(.x)), "` returned an error."), call. = FALSE)
     } else {
       stop(msg, call. = FALSE)
     }
@@ -53,7 +46,7 @@ stop_if <- function(.x, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 stop_if_any <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_any(.l, .p, ~ stop(msg, call. = FALSE))
 }
 
@@ -61,7 +54,7 @@ stop_if_any <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 stop_if_all <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_all(.l, .p, ~ stop(msg, call. = FALSE))
 }
 
@@ -69,7 +62,7 @@ stop_if_all <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 stop_if_none <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_none(.l, .p, ~ stop(msg, call. = FALSE))
 }
 
@@ -77,16 +70,9 @@ stop_if_none <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 stop_if_not <- function(.x, .p = isTRUE, msg = NULL){
-  test <- deparse(substitute(.p))
-  x <- deparse(substitute(.x))
-  if (x == ".") {
-    res <- as_function(.p)()
-  } else {
-    res <- as_function(.p)(.x)
-  }
-  if ( ! res ) {
+  if ( ! as_function(.p)(.x) ) {
     if (is.null(msg)) {
-      stop(paste0( "Test `", test, "` on `", x, "` returned an error."), call. = FALSE)
+      stop(paste0( "Test `", deparse(substitute(.p)), "` on `", deparse(substitute(.x)), "` returned an error."), call. = FALSE)
     } else {
       stop(msg, call. = FALSE)
     }
@@ -97,16 +83,9 @@ stop_if_not <- function(.x, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 warn_if <- function(.x, .p = isTRUE, msg = NULL){
-  test <- deparse(substitute(.p))
-  x <- deparse(substitute(.x))
-  if (x == ".") {
-    res <- as_function(.p)()
-  } else {
-    res <- as_function(.p)(.x)
-  }
-  if ( res ) {
+  if ( as_function(.p)(.x) ) {
     if (is.null(msg)) {
-      warning(paste0( "Test `", test, "` on `", x, "` returned a warning."), call. = FALSE, immediate. = TRUE)
+      warning(paste0( "Test `", deparse(substitute(.p)), "` on `", deparse(substitute(.x)), "` returned a warning."), call. = FALSE, immediate. = TRUE)
     } else {
       warning(msg, call. = FALSE)
     }
@@ -119,7 +98,7 @@ warn_if <- function(.x, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 warn_if_any <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_any(.l, .p, ~ warning(msg, call. = FALSE))
 }
 
@@ -127,7 +106,7 @@ warn_if_any <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 warn_if_all <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_all(.l, .p, ~ warning(msg, call. = FALSE))
 }
 
@@ -135,7 +114,7 @@ warn_if_all <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 warn_if_none <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_none(.l, .p, ~ warning(msg, call. = FALSE))
 }
 
@@ -143,16 +122,9 @@ warn_if_none <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 warn_if_not <- function(.x, .p = isTRUE, msg = NULL){
-  test <- deparse(substitute(.p))
-  x <- deparse(substitute(.x))
-  if (x == ".") {
-    res <- as_function(.p)()
-  } else {
-    res <- as_function(.p)(.x)
-  }
-  if ( ! res ) {
+  if ( ! as_function(.p)(.x) ) {
     if (is.null(msg)) {
-      warning(paste0( "Test `", test, "` on `", quo_text(x), "` returned a warning."), call. = FALSE, immediate. = TRUE)
+      warning(paste0( "Test `", deparse(substitute(.p)), "` on `", deparse(substitute(.x)), "` returned a warning."), call. = FALSE, immediate. = TRUE)
     } else {
       warning(msg, call. = FALSE)
     }
@@ -163,17 +135,10 @@ warn_if_not <- function(.x, .p = isTRUE, msg = NULL){
 #'@export
 #'@rdname messagehandler
 
-message_if <- function(.x, .p = isTRUE, msg = NULL){
-  test <- deparse(substitute(.p))
-  x <- deparse(substitute(.x))
-  if (x == ".") {
-    res <- as_function(.p)()
-  } else {
-    res <- as_function(.p)(.x)
-  }
-  if ( res ) {
+message_if <- function(.x = NULL, .p = isTRUE, msg = NULL){
+  if ( as_function(.p)(.x) ) {
     if (is.null(msg)) {
-      message(paste("Test `", test, "` on `", x, "` returned an alert."))
+      message(paste("Test `", deparse(substitute(.p)), "` on `", deparse(substitute(.x)), "` returned an alert."))
     } else {
       message(msg)
     }
@@ -184,7 +149,7 @@ message_if <- function(.x, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 message_if_any <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_any(.l, .p, ~ message(msg))
 }
 
@@ -194,7 +159,7 @@ message_if_any <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 message_if_all <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_all(.l, .p, ~ message(msg))
 }
 
@@ -202,7 +167,7 @@ message_if_all <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 message_if_none <- function(.l, .p = isTRUE, msg = NULL){
-  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(test)), "` on `", deparse(substitute(x)), "` returned an alert.")
+  if (is.null(msg)) msg <- paste("Test `", deparse(substitute(.l)), "` on `", deparse(substitute(.p)), "` returned an alert.")
   if_none(.l, .p, ~ message(msg))
 }
 
@@ -210,16 +175,9 @@ message_if_none <- function(.l, .p = isTRUE, msg = NULL){
 #'@rdname messagehandler
 
 message_if_not <- function(.x,  .p = isTRUE, msg = NULL){
-  test <- deparse(substitute(.p))
-  x <- deparse(substitute(.x))
-  if (x == ".") {
-    res <- as_function(.p)()
-  } else {
-    res <- as_function(.p)(.x)
-  }
-  if ( ! res ) {
+  if ( ! as_function(.p)(.x) ) {
     if (is.null(msg)) {
-      message(paste("Test `", test, "` on `", x, "` returned an alert."))
+      message(paste("Test `", deparse(substitute(.p)), "` on `", deparse(substitute(.x)), "` returned an alert."))
     } else {
       message(msg)
     }
