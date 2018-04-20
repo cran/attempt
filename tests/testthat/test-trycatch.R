@@ -34,6 +34,12 @@ test_that("finally works", {
   expect_output(try_catch(log(1), .f = ~ print("a")), "a")
 })
 
+test_that("trycatch works with an external variabel", {
+  a <- 1
+  expect_equal(try_catch(log(a), .e = ~ .x), 0)
+  expect_is(try_catch(log("a"), .e = ~ .x), "simpleError")
+})
+
 context("try_catch_df")
 
 test_that("try_catch_df works", {
@@ -73,7 +79,7 @@ test_that("map_try_catch works", {
   expect_that(b$error[1], function(x) is.na(x))
   expect_is(b$value, "list")
   expect_equal(b$value[[1]], 0)
-  c <- map_try_catch_df("plop", warning)
+  c <- suppressWarnings(map_try_catch_df("plop", warning))
   expect_is(c, "tbl_df")
   expect_is(c, "tbl")
   expect_is(c, "data.frame")
@@ -144,8 +150,16 @@ test_that("with_* works", {
   as_num_warn <- with_warning(as.numeric, msg = "We're performing a numeric conversion")
   expect_message(as_num_msg("1"))
   expect_warning(as_num_warn("1"))
-  expect_is(as_num_msg("1"), "numeric")
-  expect_is(as_num_warn("1"), "numeric")
+  expect_is(suppressMessages(as_num_msg("1")), "numeric")
+  expect_is(suppressWarnings(as_num_warn("1")), "numeric")
+  plop <- function() {
+    message("message")
+    warning("warning")
+    }
+  nomess <- without_message(plop)
+  nowar <- without_warning(plop)
+  expect_message(nowar())
+  expect_warning( nomess())
   }
 )
 

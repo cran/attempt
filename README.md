@@ -1,13 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![Travis build
-status](https://travis-ci.org/ColinFay/attempt.svg?branch=master)](https://travis-ci.org/ColinFay/attempt)
-[![Coverage
-status](https://codecov.io/gh/ColinFay/attempt/branch/master/graph/badge.svg)](https://codecov.io/github/ColinFay/attempt?branch=master)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/ColinFay/attempt?branch=master&svg=true)](https://ci.appveyor.com/project/ColinFay/attempt)
-
-# {attempt} 0.2.0
+# {attempt} 0.2.1
 
 A Friendlier Condition Handler for R, inspired by {purrr} mappers and
 based on {rlang}.
@@ -321,6 +314,17 @@ as_num_warn("1")
 #> [1] 1
 ```
 
+### `without_message` and `withou_warning`
+
+These two functions do the opposite, as they remove warnings and
+messages:
+
+``` r
+matrix(1:3, ncol = 2)
+no_warning_matrix <- without_warning(matrix)
+no_warning_matrix(1:3, ncol = 2)
+```
+
 ## `if_` conditions
 
 `if_none`, `if_any` and `if_all` test the elements of the list.
@@ -333,8 +337,8 @@ if_any(1:10, is.numeric, ~ "Yay!")
 #> [1] "Yay!"
 
 if_none(1:10, is.character, ~ rnorm(10))
-#>  [1]  0.13684571  1.55710529 -0.61839545 -0.35858019  0.42743481
-#>  [6] -0.86157156 -0.98375582 -0.83943835 -1.15395671 -0.04773438
+#>  [1]  0.5082694 -0.4049499 -2.1738221  0.4168055  0.7928220  0.4901836
+#>  [7] -1.7092720  0.0174628  1.3408672  0.1922164
 ```
 
 The defaut for all `.p` is `isTRUE`. So you can:
@@ -357,7 +361,7 @@ if_then(1, is.numeric, ~ "nop!")
 
 ``` r
 if_not(.x = 1, .p = is.character, ~ ".x is not a character")
-#> Error in if_not(.x = 1, .p = is.character, ~".x is not a character"): impossible de trouver la fonction "if_not"
+#> [1] ".x is not a character"
 ```
 
 And `if_else` is a wrapper around `base::ifelse()`.
