@@ -6,7 +6,7 @@ knitr::opts_chunk$set(
 )
 library(attempt)
 
-## ------------------------------------------------------------------------
+## ----eval = TRUE---------------------------------------------------------
 x <- 12
 # Stop if .x is numeric
 stop_if(.x = x, 
@@ -49,23 +49,23 @@ message_if(.x = e,
            }, 
            msg = "The square root of your element must be more than 42")
 
-## ------------------------------------------------------------------------
-true <- function() TRUE
-false <- function() FALSE
-stop_if(.x =  true(), msg = "This is true")
+## ----eval = TRUE---------------------------------------------------------
+stop_if(.x = curl::has_internet(), msg = "You shouldn't have internet to do that")
 
-warn_if_not(false(), 
-            msg = "This is false")
+warn_if(.x = curl::has_internet(), 
+            msg = "You shouldn't have internet to do that")
 
-message_if(.x = true(), 
-            msg = "Huray!")
+message_if(.x = curl::has_internet(), 
+            msg = "Huray, you have internet \\o/")
 
-## ------------------------------------------------------------------------
+## ----eval = TRUE---------------------------------------------------------
 a <- is.na(airquality$Ozone)
 message_if_any(a, msg = "NA found")
 
-## ------------------------------------------------------------------------
+## ----eval = TRUE---------------------------------------------------------
 my_fun <- function(x){
+  stop_if_not(.x = curl::has_internet(), 
+              msg = "You should have internet to do that")
   warn_if_not(x, 
           is.character, 
           msg =  "x is not a character vector. The output may not be what you're expecting.")
@@ -74,7 +74,7 @@ my_fun <- function(x){
 
 my_fun(head(iris))
 
-## ------------------------------------------------------------------------
+## ----eval = TRUE---------------------------------------------------------
 stop_if_any(iris, is.factor, msg = "Factors here. This might be due to stringsAsFactors.")
 
 warn_if_none(1:10, ~ .x < 0, msg = "You need to have at least one number under zero.")

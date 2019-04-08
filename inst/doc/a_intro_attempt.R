@@ -10,5 +10,5 @@ library(attempt)
 #  install.packages("attempt")
 
 ## ----eval = FALSE--------------------------------------------------------
-#  devtools::install_github("ColinFay/attempt")
+#  install.packages("attempt", repo = "https://colinfay.me/ran", type = "source")
 

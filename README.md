@@ -1,14 +1,24 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# {attempt} 0.2.1
+[![Travis build
+status](https://travis-ci.org/ColinFay/attempt.svg?branch=master)](https://travis-ci.org/ColinFay/attempt)
+[![Coverage
+status](https://codecov.io/gh/ColinFay/attempt/branch/master/graph/badge.svg)](https://codecov.io/github/ColinFay/attempt?branch=master)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/ColinFay/attempt?branch=master&svg=true)](https://ci.appveyor.com/project/ColinFay/attempt)
+[![](https://cranlogs.r-pkg.org/badges/attempt)](https://CRAN.R-project.org/package=attempt)
 
-A Friendlier Condition Handler for R, inspired by {purrr} mappers and
-based on {rlang}.
+# {attempt}
 
-{attempt} is designed to handle the cases when something / someone
+![](https://raw.githubusercontent.com/ColinFay/attempt/master/README-fig/attempt_hex_200.png)
+
+Tools for defensive programming, inspired by `{purrr}` mappers and based
+on `{rlang}`.
+
+`{attempt}` is designed to handle the cases when something / someone
 attempts to do something it shouldn’t.
 
-For example :
+For example:
 
   - an attempt to run a `log("a")` (error)
   - an attempt to connect to a web API without an internet connexion
@@ -17,11 +27,11 @@ For example :
     (message/warning)
   - …
 
-{attempt} provides several condition handlers, from try catch to simple
-message printing.
+`{attempt}` provides several condition handlers, from try catch to
+simple message printing.
 
-{attempt} only depends on {rlang}, and every function is design to be
-fast, making it easy to implement in other functions and packages.
+`{attempt}` only depends on `{rlang}`, and every function is design to
+be fast, making it easy to implement in other functions and packages.
 
 # Install
 
@@ -34,7 +44,7 @@ install.packages("attempt")
 The dev version:
 
 ``` r
-devtools::install_github("ColinFay/attempt")
+install.packages("attempt", repo = "https://colinfay.me/ran")
 ```
 
 # Reference
@@ -45,12 +55,12 @@ library(attempt)
 
 ## attempt
 
-`attempt` is a wrapper around base `try` that allows you to insert a
+`attempt()` is a wrapper around base `try()` that allows you to insert a
 custom messsage on error.
 
 ``` r
 attempt(log("a"))
-# Error: argument non numérique pour une fonction mathématique
+# Error: non-numeric argument to mathematical function
 attempt(log("a"), msg = "Nop !")
 # Error: Nop !
 ```
@@ -69,7 +79,7 @@ attempt(log(1), msg = "Nop !", verbose = TRUE)
 # [1] 0
 ```
 
-As with `try`, the result cant be saved as an error object:
+As with `try()`, the result can be saved as an error object:
 
 ``` r
 a <- attempt(log("a"), msg = "Nop !", verbose = TRUE)
@@ -81,21 +91,30 @@ a
 # <simpleError in log("a"): Nop !>
 ```
 
+You can check if the result is an error with `is_try_error()`
+
+``` r
+a <- attempt(log("a"), msg = "Nop !", verbose = FALSE)
+#> Error: Nop !
+is_try_error(a)
+#> [1] TRUE
+```
+
 ## silent\_attempt
 
-`silent_attempt` is a wrapper around `silently` (see further down for
-more info) and `attempt`. It attempts to run the expr, stays silent if
-the expression succeeds, and returns error or warnings if any.
+`silent_attempt()` is a wrapper around `silently()` (see further down
+for more info) and `attempt()`. It attempts to run the expr, stays
+silent if the expression succeeds, and returns error or warnings if any.
 
 ``` r
 silent_attempt(log("a"))
-# Error: argument non numérique pour une fonction mathématique
+# Error: non-numeric argument to mathematical function
 silent_attempt(log(1))
 ```
 
 ## try catch
 
-You can write a try catch with these params :
+You can write a try catch with these params:
 
   - `expr` the expression to be evaluated
   - `.e` a mapper or a function evaluated when an error occurs
@@ -111,17 +130,17 @@ In `.e` and `.f`, the `.x` refers to the error / warning object.
 try_catch(expr = log("a"), 
           .e = ~ paste0("There is an error: ", .x), 
           .w = ~ paste0("This is a warning: ", .x))
-#[1] "There is an error: Error in log(\"a\"): argument non numérique pour une fonction mathématique\n"
+#[1] "There is an error: Error in log(\"a\"): non-numeric argument to mathematical function\n"
 
 try_catch(log("a"), 
           .e = ~ stop(.x), 
           .w = ~ warning(.x))
-# Error in log("a") : argument non numérique pour une fonction mathématique
+# Error in log("a") : non-numeric argument to mathematical function
 
 try_catch(matrix(1:3, nrow= 2), 
           .e = ~ print(.x), 
           .w = ~ print(.x))
-#<simpleWarning in matrix(1:3, nrow = 2): la longueur des données [3] n'est pas un diviseur ni un multiple du nombre de lignes [2]>
+#<simpleWarning in matrix(1:3, nrow = 2): data length [3] is not a sub-multiple or multiple of the number of rows [2]>
 
 try_catch(expr = 2 + 2 , 
           .f = ~ print("Using R for addition... ok I'm out!"))
@@ -129,7 +148,7 @@ try_catch(expr = 2 + 2 ,
 # [1] 4
 ```
 
-As usual, the handlers are set only if you call them :
+As usual, the handlers are set only if you call them:
 
 ``` r
 try_catch(matrix(1:3, nrow = 2), .e = ~ print("error"))
@@ -138,7 +157,7 @@ try_catch(matrix(1:3, nrow = 2), .e = ~ print("error"))
 # [2,]    2    1
 # Warning message:
 # In matrix(1:3, nrow = 2) :
-#   la longueur des données [3] n'est pas un diviseur ni un multiple du nombre de lignes [2]
+# data length [3] is not a sub-multiple or multiple of the number of rows [2]
 ```
 
 ``` r
@@ -148,9 +167,9 @@ try_catch(matrix(1:3, nrow = 2), .w = ~ print("warning"))
 
 ### Traditionnal way
 
-{attempt} is flexible in how you can specify your arguments.
+`{attempt}` is flexible in how you can specify your arguments.
 
-You can, as you do with {base} `tryCatch`, use a plain old function:
+You can, as you do with `{base}` `tryCatch()`, use a plain old function:
 
 ``` r
 try_catch(log("a"), 
@@ -164,7 +183,7 @@ try_catch(log("a"),
             print("let's move on now")
           })
 
-# [1] "There is an error: Error in log(\"a\"): argument non numérique pour une fonction mathématique\n"
+# [1] "There is an error: Error in log(\"a\"): non-numeric argument to mathematical function\n"
 # [1] "Ok, let's save this"
 # [1] "log saved on log.txt at 2018-01-30 16:59:13"
 # [1] "let's move on now"
@@ -179,28 +198,27 @@ try_catch(log("a"),
           },
           .f = ~ print("I'm not sure you can do that pal !"))
 # [1] "I'm not sure you can do that pal !"
-# [1] "There is an error: Error in log(\"a\"): argument non numérique pour une fonction mathématique\n"
+# [1] "There is an error: Error in log(\"a\"): non-numeric argument to mathematical function\n"
 
 try_catch(log("a"), 
           .e = ~ paste0("There is an error: ", .x),
           .f = function() print("I'm not sure you can do that pal !"))
 # [1] "I'm not sure you can do that pal !"
-# [1] "There is an error: Error in log(\"a\"): argument non numérique pour une fonction mathématique\n"
+# [1] "There is an error: Error in log(\"a\"): non-numeric argument to mathematical function\n"
 ```
 
-### try\_catch\_df
+### `try_catch_df()`
 
-`try_catch_df` returns a tibble with the call, the error message if any,
-the warning message if any, and the value of the evaluated expression or
-“error”. The values will always be contained in a list-column.
+`try_catch_df()` returns a tibble with the call, the error message if
+any, the warning message if any, and the value of the evaluated
+expression or “error”. The values will always be contained in a
+list-column.
 
 ``` r
 res_log <- try_catch_df(log("a"))
 res_log
-#>       call                                                 error warning
-#> 1 log("a") argument non numérique pour une fonction mathématique      NA
-#>   value
-#> 1 error
+#>       call                                         error warning value
+#> 1 log("a") non-numeric argument to mathematical function      NA error
 res_log$value
 #> [[1]]
 #> [1] "error"
@@ -209,8 +227,8 @@ res_matrix <- try_catch_df(matrix(1:3, nrow = 2))
 res_matrix
 #>                    call error
 #> 1 matrix(1:3, nrow = 2)    NA
-#>                                                                                    warning
-#> 1 la longueur des données [3] n'est pas un diviseur ni un multiple du nombre de lignes [2]
+#>                                                                       warning
+#> 1 data length [3] is not a sub-multiple or multiple of the number of rows [2]
 #>        value
 #> 1 1, 2, 3, 1
 res_matrix$value
@@ -228,9 +246,9 @@ res_success$value
 #> [1] 0
 ```
 
-### map try\_catch
+### `map_try_catch()`
 
-`map_try_catch` and `map_try_catch_df` allow you to map on a list of
+`map_try_catch()` and `map_try_catch_df()` allow you to map on a list of
 arguments `l`, to be evaluated by the function in `fun`.
 
 ``` r
@@ -242,26 +260,26 @@ map_try_catch(l = list(1, 3, "a"), fun = log, .e = ~ .x)
 #> [1] 1.098612
 #> 
 #> [[3]]
-#> <simpleError in .Primitive("log")("a"): argument non numérique pour une fonction mathématique>
+#> <simpleError in .Primitive("log")("a"): non-numeric argument to mathematical function>
 
 map_try_catch_df(list(1,3,"a"), log)
-#>                     call
-#> 1   .Primitive("log")(1)
-#> 2   .Primitive("log")(3)
-#> 3 .Primitive("log")("a")
-#>                                                   error warning    value
-#> 1                                                  <NA>      NA        0
-#> 2                                                  <NA>      NA 1.098612
-#> 3 argument non numérique pour une fonction mathématique      NA    error
+#>                     call                                         error
+#> 1   .Primitive("log")(1)                                          <NA>
+#> 2   .Primitive("log")(3)                                          <NA>
+#> 3 .Primitive("log")("a") non-numeric argument to mathematical function
+#>   warning    value
+#> 1      NA        0
+#> 2      NA 1.098612
+#> 3      NA    error
 ```
 
 ## Adverbs
 
 Adverbs take a function and return a modified function.
 
-### silently
+### `silently()`
 
-`silently` transforms a function so that when you call this new
+`silently()` transforms a function so that when you call this new
 function, it returns nothing unless there is an error or a warning
 (contrary to `attempt` that returns the result). In a sense, the new
 function stay silent unless error or warning.
@@ -270,35 +288,36 @@ function stay silent unless error or warning.
 silent_log <- silently(log)
 silent_log(1)
 silent_log("a")
-# Error in .f(...) : argument non numérique pour une fonction mathématique
+#> Error in .f(...) : non-numeric argument to mathematical function
+# Error in .f(...) : non-numeric argument to mathematical function
 ```
 
-With `silently`, the result is never returned.
+With `silently()`, the result is never returned.
 
 ``` r
 silent_matrix <- silently(matrix)
 silent_matrix(1:3, 2)
 #Warning message:
 #In .f(...) :
-#  la longueur des données [3] n'est pas un diviseur ni un multiple du nombre de lignes [2]
+#  data length [3] is not a sub-multiple or multiple of the number of rows [2]
 ```
 
-### surely
+### `surely()`
 
-`surely` transforms a function so that when you call this new function,
-it calls `attempt()` - i.e. in the code below, calling `sure_log(1)` is
-the same as calling `attempt(log(1))`. In a sense, you’re sure this new
-function will always work.
+`surely()` transforms a function so that when you call this new
+function, it calls `attempt()` - i.e. in the code below, calling
+`sure_log(1)` is the same as calling `attempt(log(1))`. In a sense,
+you’re sure this new function will always work.
 
 ``` r
 sure_log <- surely(log)
 sure_log(1)
 # [1] 0
 sure_log("a")
-# Error: argument non numérique pour une fonction mathématique
+# Error: non-numeric argument to mathematical function
 ```
 
-### `with_message` and `with_warning`
+### `with_message()` and `with_warning()`
 
 These two functions take a function, and add a warning or a message to
 it.
@@ -314,9 +333,9 @@ as_num_warn("1")
 #> [1] 1
 ```
 
-### `without_message` and `withou_warning`
+### `without_message()`, `without_warning()`, and `discretly()`
 
-These two functions do the opposite, as they remove warnings and
+These three functions do the opposite, as they remove warnings and
 messages:
 
 ``` r
@@ -327,7 +346,7 @@ no_warning_matrix(1:3, ncol = 2)
 
 ## `if_` conditions
 
-`if_none`, `if_any` and `if_all` test the elements of the list.
+`if_none()`, `if_any()` and `if_all()` test the elements of the list.
 
 ``` r
 if_all(1:10, ~ .x < 11, ~ return(letters[1:10]))
@@ -337,11 +356,11 @@ if_any(1:10, is.numeric, ~ "Yay!")
 #> [1] "Yay!"
 
 if_none(1:10, is.character, ~ rnorm(10))
-#>  [1]  0.5082694 -0.4049499 -2.1738221  0.4168055  0.7928220  0.4901836
-#>  [7] -1.7092720  0.0174628  1.3408672  0.1922164
+#>  [1] -0.62041260  1.18903502  0.34425236  0.40211829 -0.89651209
+#>  [6]  0.08673175 -0.65066136  0.47734033 -1.34301785 -0.20193553
 ```
 
-The defaut for all `.p` is `isTRUE`. So you can:
+The defaut for all `.p` is `isTRUE()`. So you can:
 
 ``` r
 a <- c(FALSE, TRUE, TRUE, TRUE)
@@ -350,21 +369,21 @@ if_any(a, .f = ~ "nop!")
 #> [1] "nop!"
 ```
 
-`if_then` performs a simple “if this then do that”:
+`if_then()` performs a simple “if this then do that”:
 
 ``` r
 if_then(1, is.numeric, ~ "nop!")
 #> [1] "nop!"
 ```
 
-`if_not` runs `.f` if `.p(.x)` is not TRUE :
+`if_not()` runs `.f` if `.p(.x)` is not TRUE :
 
 ``` r
 if_not(.x = 1, .p = is.character, ~ ".x is not a character")
 #> [1] ".x is not a character"
 ```
 
-And `if_else` is a wrapper around `base::ifelse()`.
+And `if_else()` is a wrapper around `base::ifelse()`.
 
 If you want these function to return a value, you need to wrap these
 values into a mapper / a function. E.g, to return a vector, you’ll need
@@ -378,14 +397,14 @@ a
 
 ## warnings and messages
 
-The `stop_if`, `warn_if` and `message_if` are easy to use functions that
-send an error, a warning or a message if a condition is met. Each
-function has its counterpart with `_not` that returns a message if the
-condition is not met.
+The `stop_if()`, `warn_if()` and `message_if()` are easy to use
+functions that send an error, a warning or a message if a condition is
+met. Each function has its counterpart with `_not` that returns a
+message if the condition is not met.
 
-`stop_if_not` is quite the same as `assert_that` from the {assertthat}
-package, except that it can takes mappers. It is not the same as base
-`stopifnot()`, as it doesn’t take a list of expression.
+`stop_if_not()` is quite the same as `assert_that()` from the
+{assertthat} package, except that it can takes mappers. It is not the
+same as base `stopifnot()`, as it doesn’t take a list of expression.
 
 These functions are also flexible as you can pass base predicates
 (is.numeric, is.character…), a custom predicate built with mappers, or
@@ -462,7 +481,7 @@ message_if(.x = curl::has_internet(),
 #> Huray, you have internet \o/
 ```
 
-If you don’t specify a `.p`, the default test is `isTRUE`.
+If you don’t specify a `.p`, the default test is `isTRUE()`.
 
 ``` r
 a <- is.na(airquality$Ozone)
@@ -472,7 +491,7 @@ message_if_any(a, msg = "NA found")
 
 ### In function
 
-That can come really handy inside a function :
+That can come really handy inside a function:
 
 ``` r
 my_fun <- function(x){
@@ -496,11 +515,11 @@ my_fun(head(iris))
 
 ### none, all, any
 
-`stop_if`, `warn_if` and `message_if` all have complementary tests with
-`_all`, `_any` and `_none`, which combine the `if_*` and the `warn_*`,
-`stop_*` and `message_*` seen before. They take a list as first
-argument, and a predicate. They test if any, all or none of the elements
-validate the
+`stop_if()`, `warn_if()` and `message_if()` all have complementary tests
+with `_all`, `_any` and `_none`, which combine the `if_*` and the
+`warn_*`, `stop_*` and `message_*` seen before. They take a list as
+first argument, and a predicate. They test if any, all or none of the
+elements validate the
 predicate.
 
 ``` r
@@ -512,6 +531,23 @@ warn_if_none(1:10, ~ .x < 0, msg = "You need to have at least one number under z
 
 message_if_all(1:100, is.numeric, msg = "That makes a lot of numbers.")
 #> That makes a lot of numbers.
+```
+
+## `on_error()`
+
+`on_error()` behaves as `on.exit()` except it happens only when there is
+an error in the function.
+
+``` r
+y <- function(x){
+  on_error(~ print("ouch"))
+  log(x)
+}
+y(12)
+[1] 2.484907
+y("a")
+Error in log(x) : non-numeric argument to mathematical function
+[1] "ouch"
 ```
 
 # Misc
