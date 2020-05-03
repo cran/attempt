@@ -13,7 +13,8 @@ vignette: >
 knitr::opts_chunk$set(
   error = TRUE,
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  eval = FALSE
 )
 library(attempt)
 ```
@@ -26,7 +27,7 @@ Adverbs take a function and return a modified function.
 
 `silently()` transforms a function so that when you call this new function, it returns nothing unless there is an error or a warning (contrary to `attempt` that returns the result). In a sense, the new function stay silent unless error or warning.
 
-```{r eval = TRUE}
+```{r}
 silent_log <- silently(log)
 silent_log(1)
 silent_log("a")
@@ -60,7 +61,7 @@ sure_log("a")
 
 These two functions take a function, and add a warning or a message to it.
 
-```{r eval = TRUE}
+```{r}
 as_num_msg <- with_message(as.numeric, msg = "We're performing a numeric conversion")
 as_num_warn <- with_warning(as.numeric, msg = "We're performing a numeric conversion")
 as_num_msg("1")

@@ -2,9 +2,12 @@
 % Please edit documentation in R/adverbs.R
 \name{discretly}
 \alias{discretly}
+\alias{discreetly}
 \title{discretly}
 \usage{
 discretly(.f)
+
+discreetly(.f)
 }
 \arguments{
 \item{.f}{the function to wrap}

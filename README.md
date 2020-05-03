@@ -253,6 +253,9 @@ arguments `l`, to be evaluated by the function in `fun`.
 
 ``` r
 map_try_catch(l = list(1, 3, "a"), fun = log, .e = ~ .x)
+#> Warning: `lang()` is deprecated as of rlang 0.2.0.
+#> Please use `call2()` instead.
+#> This warning is displayed once per session.
 #> [[1]]
 #> [1] 0
 #> 
@@ -263,14 +266,14 @@ map_try_catch(l = list(1, 3, "a"), fun = log, .e = ~ .x)
 #> <simpleError in .Primitive("log")("a"): non-numeric argument to mathematical function>
 
 map_try_catch_df(list(1,3,"a"), log)
-#>                     call                                         error
-#> 1   .Primitive("log")(1)                                          <NA>
-#> 2   .Primitive("log")(3)                                          <NA>
-#> 3 .Primitive("log")("a") non-numeric argument to mathematical function
-#>   warning    value
-#> 1      NA        0
-#> 2      NA 1.098612
-#> 3      NA    error
+#>                     call                                         error warning
+#> 1   .Primitive("log")(1)                                          <NA>      NA
+#> 2   .Primitive("log")(3)                                          <NA>      NA
+#> 3 .Primitive("log")("a") non-numeric argument to mathematical function      NA
+#>      value
+#> 1        0
+#> 2 1.098612
+#> 3    error
 ```
 
 ## Adverbs
@@ -356,8 +359,8 @@ if_any(1:10, is.numeric, ~ "Yay!")
 #> [1] "Yay!"
 
 if_none(1:10, is.character, ~ rnorm(10))
-#>  [1] -0.62041260  1.18903502  0.34425236  0.40211829 -0.89651209
-#>  [6]  0.08673175 -0.65066136  0.47734033 -1.34301785 -0.20193553
+#>  [1] -0.9327988  1.1379255  1.8019633  0.4857036 -0.3833032 -1.5771919
+#>  [7] -1.5926296 -1.6801611 -0.1579917 -0.6152248
 ```
 
 The defaut for all `.p` is `isTRUE()`. So you can:
@@ -465,8 +468,7 @@ message_if(.x = e,
 ```
 
 If you need to call a function that takes no argument at `.p` (like
-`curl::has_internet()`), use this function as
-`.x`.
+`curl::has_internet()`), use this function as `.x`.
 
 ``` r
 stop_if(.x = curl::has_internet(), msg = "You shouldn't have internet to do that")
@@ -519,8 +521,7 @@ my_fun(head(iris))
 with `_all`, `_any` and `_none`, which combine the `if_*` and the
 `warn_*`, `stop_*` and `message_*` seen before. They take a list as
 first argument, and a predicate. They test if any, all or none of the
-elements validate the
-predicate.
+elements validate the predicate.
 
 ``` r
 stop_if_any(iris, is.factor, msg = "Factors here. This might be due to stringsAsFactors.")
@@ -549,22 +550,3 @@ y("a")
 Error in log(x) : non-numeric argument to mathematical function
 [1] "ouch"
 ```
-
-# Misc
-
-## Acknowledgments
-
-Thanks to [Romain](http://romain.rbind.io/) for the name suggestion.
-
-## Contact
-
-Questions and feedbacks [welcome](mailto:contact@colinfay.me)\!
-
-You want to contribute ? Open a
-[PR](https://github.com/ColinFay/attempt/pulls) :) If you encounter a
-bug or want to suggest an enhancement, please [open an
-issue](https://github.com/ColinFay/attempt/issues).
-
-Please note that this project is released with a [Contributor Code of
-Conduct](CONDUCT.md). By participating in this project you agree to
-abide by its terms.

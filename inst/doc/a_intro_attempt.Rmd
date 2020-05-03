@@ -56,7 +56,7 @@ install.packages("attempt", repo = "https://colinfay.me/ran", type = "source")
 
 ## Using {attempt}
 
-{attempt} provides four families of functions : 
+`{attempt}` provides four families of functions : 
 
 + try catch 
 + adverbs 
@@ -99,16 +99,12 @@ In other words, `~ .x + 2` is the equivalent of `function(x) return(x + 2)`.
 
 The first argument in a mapper need to be `.x`.
 
-[More on mappers](http://colinfay.me/purrr-mappers/).
+[More on mappers](https://colinfay.me/purrr-mappers/).
 
 # Misc
 
-## Acknowledgments
-
-Thanks to [Romain](http://romain.rbind.io/) for the name suggestion. 
-
 ## Contact
 
-Questions and feedbacks [welcome](mailto:contact@colinfay.me)!
+Questions and feedback [welcome](mailto:contact@colinfay.me)!
 
 You want to contribute ? Open a [PR](https://github.com/ColinFay/attempt/pulls) :) If you encounter a bug or want to suggest an enhancement, please [open an issue](https://github.com/ColinFay/attempt/issues).

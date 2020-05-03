@@ -13,7 +13,8 @@ vignette: >
 knitr::opts_chunk$set(
   error = TRUE,
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 library(attempt)
 ```
@@ -57,7 +58,7 @@ a
 
 You can check if the result is an error with `is_try_error()`
 
-```{r eval = TRUE}
+```{r}
 a <- attempt(log("a"), msg = "Nop !", verbose = FALSE)
 is_try_error(a)
 ```
@@ -173,7 +174,7 @@ try_catch(log("a"),
 
 `try_catch_df()` returns a tibble with the call, the error message if any, the warning message if any, and the value of the evaluated expression or "error". The values will always be contained in a list-column.
 
-```{r eval = TRUE}
+```{r}
 res_log <- try_catch_df(log("a"))
 res_log
 res_log$value
@@ -191,7 +192,7 @@ res_success$value
 
 `map_try_catch()` and `map_try_catch_df()` allow you to map on a list of arguments `l`, to be evaluated by the function in `fun`. 
 
-```{r eval = TRUE}
+```{r}
 map_try_catch(l = list(1, 3, "a"), fun = log, .e = ~ .x)
 
 map_try_catch_df(list(1,3,"a"), log)

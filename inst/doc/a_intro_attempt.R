@@ -1,4 +1,4 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   error = TRUE,
   collapse = TRUE,
@@ -6,9 +6,9 @@ knitr::opts_chunk$set(
 )
 library(attempt)
 
-## ----eval = FALSE--------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  install.packages("attempt")
 
-## ----eval = FALSE--------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  install.packages("attempt", repo = "https://colinfay.me/ran", type = "source")
 

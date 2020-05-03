@@ -99,6 +99,8 @@ surely <- function (.f) {
 #'
 #' @return an error if any, a warning if any, the result if any
 #' @export
+#' @rdname discreetly
+#'
 #' @importFrom rlang as_function
 #'
 #' @examples
@@ -113,6 +115,10 @@ discretly <- function (.f) {
     suppressMessages(suppressWarnings(.f(...)))
   }
 }
+
+#' @export
+#' @rdname discreetly
+discreetly <- discretly
 
 #' Silently attempt
 #'

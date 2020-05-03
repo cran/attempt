@@ -1,4 +1,8 @@
-# attempt 0.3.0.9000
+# attempt 0.3.1
+
+* `discretly()` is now aliased `discreetly`
+
+# attempt 0.3.0
 
 * New `is_try_error()` function that tests if an object is of class "try-error".
 * New `on_error()` function, for adding a local error handler.

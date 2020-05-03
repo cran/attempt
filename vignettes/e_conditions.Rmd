@@ -13,7 +13,8 @@ vignette: >
 knitr::opts_chunk$set(
   error = TRUE,
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  eval = FALSE
 )
 library(attempt)
 ```
@@ -22,13 +23,13 @@ library(attempt)
 
 The `stop_if()`, `warn_if()` and `message_if()` are easy to use functions that send an error, a warning or a message if a condition is met. Each function has its counterpart with `_not` that returns a message if the condition is not met.
 
-`stop_if_not()` is quite the same as `assert_that()` from the {assertthat} package, except that it can takes mappers. It is not the same as base `stopifnot()`, as it doesn't take a list of expression.
+`stop_if_not()` is quite the same as `assert_that()` from the `{assertthat}` package, except that it can takes mappers. It is not the same as base `stopifnot()`, as it doesn't take a list of expression.
 
 These functions are also flexible as you can pass base predicates (is.numeric, is.character...), a custom predicate built with mappers, or even your own predicate function.
 
 You can either choose a custom message or just let the built-in messages be printed:
 
-```{r eval = TRUE}
+```{r}
 x <- 12
 # Stop if .x is numeric
 stop_if(.x = x, 
@@ -74,7 +75,7 @@ message_if(.x = e,
 
 If you need to call a function that takes no argument at `.p` (like `curl::has_internet()`), use this function as `.x`. 
 
-```{r eval = TRUE}
+```{r}
 stop_if(.x = curl::has_internet(), msg = "You shouldn't have internet to do that")
 
 warn_if(.x = curl::has_internet(), 
@@ -86,7 +87,7 @@ message_if(.x = curl::has_internet(),
 
 If you don't specify a `.p`, the default test is `isTRUE()`.
 
-```{r eval = TRUE}
+```{r}
 a <- is.na(airquality$Ozone)
 message_if_any(a, msg = "NA found")
 ```
@@ -95,7 +96,7 @@ message_if_any(a, msg = "NA found")
 
 That can come really handy inside a function: 
 
-```{r eval = TRUE}
+```{r}
 my_fun <- function(x){
   stop_if_not(.x = curl::has_internet(), 
               msg = "You should have internet to do that")
@@ -112,7 +113,7 @@ my_fun(head(iris))
 
 `stop_if()`, `warn_if()` and `message_if()` all have complementary tests with `_all`, `_any` and `_none`, which combine the `if_*` and the `warn_*`, `stop_*` and `message_*` seen before. They take a list as first argument, and a predicate. They test if any, all or none of the elements validate the predicate. 
 
-```{r eval = TRUE}
+```{r}
 stop_if_any(iris, is.factor, msg = "Factors here. This might be due to stringsAsFactors.")
 
 warn_if_none(1:10, ~ .x < 0, msg = "You need to have at least one number under zero.")
